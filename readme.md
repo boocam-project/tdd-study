@@ -6,19 +6,24 @@
 * Spring Boot 2.7.14
 
 ## 진행
-* 각자 제공된 요구사항들을 처리합니다.
-* 각자 TDD로 개발 후 main branch에 merge합니다.
+* 해당 repository을 fork 합니다.
+* 각자 fork받은 본인의 Repository에서 TDD를 활용 해 제공된 요구사항들을 처리합니다.
 * 단, 본인의 TDD 스타일을 설명하기 위해 TDD의 Step별로 Commit을 해주시길 바랍니다.
-* 팀원들은 팀원들의 Commit Log를 살펴보고 의견을 나눕니다.
+  * 커밋은 다른 팀원들이 이해하기 쉽게 상세하게 작성합시다.
+* 메인 repository로 PR을 신청합니다. 
+* 팀원들의 Commit Log를 살펴보고 의견을 나눕니다.
 
-### Commit 
-* 커밋은 
-
-## Day 1-2
 ### 공통사항
 #### 엔티티
 * 모든 도메인 엔티티들은 `생성 일시(createdAt)`와 `최종 수정 일시(lastModifiedAt)`을 가지고 있어야 합니다.
 * `lastModifiedAt`을 제외하고는 모두 Not-Null 제약조건을 지켜야 합니다. (편의성을 위해 Null 제약조건은 작성하지 않았습니다.)
+* 
+#### 설정정보
+* Datasource 설정정보를 입력해야 합니다.
+* `application.yaml`에 각자 설정정보를 입력합시다.
+* 혹시 원격 DB (AWS의 RDS 등)을 사용한다면 gitignore을 필수적으로 합시다.
+
+## Day 1-2
 
 #### 패키지 구조
 ```text
