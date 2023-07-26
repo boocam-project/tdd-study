@@ -2,6 +2,8 @@ package com.swger.tddstudy.product.domain;
 
 import com.swger.tddstudy.util.BaseEntity;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,4 +23,6 @@ public class Product extends BaseEntity {
 
     private int amount;
 
+    @Enumerated(EnumType.STRING)
+    private SellingStatus sellingStatus;
 }
