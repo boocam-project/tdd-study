@@ -2,21 +2,18 @@ package com.swger.tddstudy.user.service;
 
 import com.swger.tddstudy.user.domain.User;
 import com.swger.tddstudy.user.repository.UserRepository;
-import com.swger.tddstudy.user.service.dto.request.SignUpServiceRequest;
 import com.swger.tddstudy.user.service.dto.request.LoginServiceRequest;
+import com.swger.tddstudy.user.service.dto.request.SignUpServiceRequest;
 import com.swger.tddstudy.user.service.dto.response.LoginResponse;
 import com.swger.tddstudy.user.service.dto.response.SignUpResponse;
-import javax.transaction.Transactional;
+import com.swger.tddstudy.util.IntegrationTestSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@Transactional
-@SpringBootTest
-class UserServiceTest {
+class UserServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserService userService;
@@ -101,7 +98,7 @@ class UserServiceTest {
             LoginServiceRequest loginServiceRequest = new LoginServiceRequest("username2", "12344");
             Assertions.assertThatThrownBy(
                     () -> userService.login(loginServiceRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(BadCredentialException.class)
                 .hasMessage("적절하지 않은 로그인 정보입니다.");
         }
 
@@ -117,7 +114,7 @@ class UserServiceTest {
             LoginServiceRequest loginServiceRequest = new LoginServiceRequest("username1", "12345");
             Assertions.assertThatThrownBy(
                     () -> userService.login(loginServiceRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(BadCredentialException.class)
                 .hasMessage("적절하지 않은 로그인 정보입니다.");
         }
     }

@@ -36,10 +36,10 @@ public class UserService {
 
     public LoginResponse login(LoginServiceRequest request) {
         User findUser = userRepository.findByUsername(request.getUsername())
-            .orElseThrow(() -> new IllegalArgumentException("적절하지 않은 로그인 정보입니다."));
+            .orElseThrow(() -> new BadCredentialException("적절하지 않은 로그인 정보입니다."));
 
         if (!isPasswordCorrect(request.getPassword(), findUser.getPassword())) {
-            throw new IllegalArgumentException("적절하지 않은 로그인 정보입니다.");
+            throw new BadCredentialException("적절하지 않은 로그인 정보입니다.");
         }
 
         return LoginResponse.toDto(findUser);
