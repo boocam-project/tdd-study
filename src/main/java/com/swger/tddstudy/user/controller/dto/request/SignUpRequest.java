@@ -10,20 +10,20 @@ import lombok.Getter;
 @Getter
 public class SignUpRequest {
 
-    @Size(min = 6, max = 12)
-    @NotBlank
+    @NotBlank(message = "아이디를 입력해주세요.")
+    @Size(min = 6, max = 12, message = "아이디는 6 ~ 12 자리여야 합니다.")
     private final String username;
 
-    @Size(min = 6, max = 12)
-    @NotBlank
+    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @Size(min = 6, max = 12, message = "비밀번호는 6 ~ 12 자리여야 합니다.")
     private final String password;
 
-    @Size(min = 6, max = 12)
-    @NotBlank
+    @NotBlank(message = "비밀번호 재확인을 입력해주세요.")
+    @Size(min = 6, max = 12, message = "비밀번호 재확인은 6 ~ 12 자리여야 합니다.")
     private final String rePassword;
 
-    @Size(min = 2, max = 10)
-    @NotBlank
+    @NotBlank(message = "닉네임을 입력해주세요.")
+    @Size(min = 2, max = 10, message = "닉네임은 2 ~ 10 자리여야 합니다.")
     private final String nickname;
 
     @JsonCreator
