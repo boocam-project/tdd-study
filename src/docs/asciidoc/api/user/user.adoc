@@ -1,0 +1,10 @@
+[[user-signUp]]
+=== 회원 가입
+
+==== HTTP Request
+include::{snippets}/user-signUp/http-request.adoc[]
+include::{snippets}/user-signUp/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/user-signUp/http-response.adoc[]
+include::{snippets}/user-signUp/response-fields.adoc[]
