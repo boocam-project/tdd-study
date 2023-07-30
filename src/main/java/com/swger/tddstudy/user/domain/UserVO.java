@@ -1,13 +1,12 @@
 package com.swger.tddstudy.user.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class UserVO {
     private Long id;

@@ -28,9 +28,8 @@ public class UserTest {
     @Rollback(value = true)
     @DisplayName("회원가입 테스트")
     public void userJoinTest() {
-        Long savedId = userService.save(newUser());
-        UserVO userVO = userService.findById(savedId);
-        assertThat(newUser().getUsername()).isEqualTo(userVO.getUsername());
+        UserVO savedUserVO = userService.save(newUser());
+        assertThat(newUser().getUsername()).isEqualTo(savedUserVO.getUsername());
     }
 
     @Test
@@ -44,7 +43,7 @@ public class UserTest {
         String userLevel = "SILVER";
         String userType = "USER";
         UserVO userVO = new UserVO(username, password, nickname, userLevel, userType);
-        Long savedId = userService.save(userVO);
+        userService.save(userVO);
         // 로그인 객체 생성 후 로그인
         UserVO loginUserVO = new UserVO();
         loginUserVO.setUsername(username);
@@ -65,7 +64,7 @@ public class UserTest {
         String userLevel = "GOLD";
         String userType = "USER";
         UserVO userVO = new UserVO(username, password, nickname, userLevel, userType);
-        Long savedId = userService.save(userVO);
+        Long savedId = userService.save(userVO).getId();
         UserVO levelUpResult = userService.levelUp(savedId);
         // 레벨업 결과 BRONZE -> SILVER / SILVER -> GOLD / GOLD -> GOLD 면 성공
         assertThat(levelUpResult.getUserLevel()).isEqualTo("GOLD");

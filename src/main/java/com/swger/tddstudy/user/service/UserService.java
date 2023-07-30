@@ -15,8 +15,8 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public Long save(UserVO userVO) {
-        return userRepository.save(userVO.toEntity()).getId();
+    public UserVO save(UserVO userVO) {
+        return userRepository.save(userVO.toEntity()).toUserVO();
     }
 
     public UserVO login(UserVO userVO) {
