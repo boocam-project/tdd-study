@@ -2,7 +2,7 @@ package com.swger.tddstudy.order.domain;
 
 import com.swger.tddstudy.orderProduct.domain.OrderProduct;
 import com.swger.tddstudy.util.BaseEntity;
-import com.swger.tddstudy.user.domain.User;
+import com.swger.tddstudy.user.entity.User;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -33,6 +33,6 @@ public class Order extends BaseEntity {
 
     private int price;
 
-    @Enum태erated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 }
