@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 public class UserTest {
 
     @Autowired
@@ -24,7 +25,6 @@ public class UserTest {
     }
 
     @Test
-    @Transactional // test에서는 자동 롤백되긴 함
     @Rollback(value = true)
     @DisplayName("회원가입 테스트")
     public void userJoinTest() {
@@ -33,7 +33,6 @@ public class UserTest {
     }
 
     @Test
-    @Transactional
     @Rollback(value = true)
     @DisplayName("로그인 테스트")
     public void userloginTest() {
@@ -54,7 +53,6 @@ public class UserTest {
     }
 
     @Test
-    @Transactional
     @Rollback(value = true)
     @DisplayName("레벨업 테스트")
     public void levelUpTest() {

@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
@@ -49,7 +50,6 @@ public class UserService {
     }
 
     // 다섯 번 주문시 userLevel이 업그레이드 되는 기능을 위한 update를 지원
-    @Transactional
     public UserVO levelUp(Long id) {
         Optional<User> optionalUserEntity = userRepository.findById(id);
         if (optionalUserEntity.isPresent()) {
