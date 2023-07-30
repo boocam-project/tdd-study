@@ -36,17 +36,11 @@ public class UserTest {
     @Rollback(value = true)
     @DisplayName("로그인 테스트")
     public void userloginTest() {
-        String username = "로그인용 이름";
-        String password = "로그인용 비밀번호";
-        String nickname = "로그인용 닉네임";
-        String userLevel = "SILVER";
-        String userType = "USER";
-        UserVO userVO = new UserVO(username, password, nickname, userLevel, userType);
-        userService.save(userVO);
+        UserVO savedUserVO = userService.save(newUser());
         // 로그인 객체 생성 후 로그인
         UserVO loginUserVO = new UserVO();
-        loginUserVO.setUsername(username);
-        loginUserVO.setPassword(password);
+        loginUserVO.setUsername(savedUserVO.getUsername());
+        loginUserVO.setPassword(savedUserVO.getPassword());
         UserVO loginResult = userService.login(loginUserVO);
         // 로그인 결과가 not null 이면 테스트 통과
         assertThat(loginResult).isNotNull();
@@ -54,17 +48,34 @@ public class UserTest {
 
     @Test
     @Rollback(value = true)
-    @DisplayName("레벨업 테스트")
-    public void levelUpTest() {
-        String username = "로그인용 이름";
-        String password = "로그인용 비밀번호";
-        String nickname = "로그인용 닉네임";
-        String userLevel = "GOLD";
-        String userType = "USER";
-        UserVO userVO = new UserVO(username, password, nickname, userLevel, userType);
-        Long savedId = userService.save(userVO).getId();
+    @DisplayName("레벨업 테스트 (BRONZE -> SILVER)")
+    public void levelUpTest1() {
+        UserVO levelUpUser = newUser();
+        levelUpUser.setUserLevel("BRONZE");
+        Long savedId = userService.save(levelUpUser).getId();
         UserVO levelUpResult = userService.levelUp(savedId);
-        // 레벨업 결과 BRONZE -> SILVER / SILVER -> GOLD / GOLD -> GOLD 면 성공
+        assertThat(levelUpResult.getUserLevel()).isEqualTo("SILVER");
+    }
+
+    @Test
+    @Rollback(value = true)
+    @DisplayName("레벨업 테스트 (SILVER -> GOLD)")
+    public void levelUpTest2() {
+        UserVO levelUpUser = newUser();
+        levelUpUser.setUserLevel("SILVER");
+        Long savedId = userService.save(levelUpUser).getId();
+        UserVO levelUpResult = userService.levelUp(savedId);
+        assertThat(levelUpResult.getUserLevel()).isEqualTo("GOLD");
+    }
+
+    @Test
+    @Rollback(value = true)
+    @DisplayName("레벨업 테스트 (GOLD -> GOLD)")
+    public void levelUpTest3() {
+        UserVO levelUpUser = newUser();
+        levelUpUser.setUserLevel("GOLD");
+        Long savedId = userService.save(levelUpUser).getId();
+        UserVO levelUpResult = userService.levelUp(savedId);
         assertThat(levelUpResult.getUserLevel()).isEqualTo("GOLD");
     }
 
