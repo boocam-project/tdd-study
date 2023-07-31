@@ -1,20 +1,32 @@
 package com.swger.tddstudy.user.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import com.swger.tddstudy.user.dto.UserDto;
 import com.swger.tddstudy.user.entity.User;
 import com.swger.tddstudy.user.repository.UserRepository;
 import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.response.LogoutResponse;
 import com.swger.tddstudy.user.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,10 +40,10 @@ public class UserController {
         try {
             userService.save(userDto);
             return ResponseEntity.ok("Join success"); // 메시지 명시
-        } catch (DuplicateKeyException u) { // 중복된 username인 경우
+        } catch (DuplicateKeyException e) { // 중복된 이메일인 경우
             return ResponseEntity.badRequest().body("Join failed: Email already exists");
-        } catch (Exception u) { // 그 외의 예외 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패: " + u.getMessage());
+        } catch (Exception e) { // 그 외의 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패: " + e.getMessage());
         }
     }
 
@@ -52,7 +64,7 @@ public class UserController {
             return responseBody;
         }
 
-        user.setLogin(true); // 로그인 상태 업데이트
+
         userService.save(user); // 변경된 로그인 상태 저장
 
         httpSession.setAttribute("user", user); // 세션에 로그인 정보 유지
@@ -65,7 +77,7 @@ public class UserController {
 
         responseBody.put("sessionId", httpSession.getId());
         responseBody.put("nickname", user.getNickname());
-        responseBody.put("username", user.getUsername());
+        responseBody.put("email", user.getUsername());
         responseBody.put("password", user.getPassword());
 
         responseBody.put("message", "Login Success");
@@ -78,23 +90,6 @@ public class UserController {
         return userService.checkDuplicateNickname(nickname);
     } // 중복이면 true, 아니면 false
 
-
-    @GetMapping("/check-login")//로그인 여부?
-    public ResponseEntity<Boolean> checkLogin(@RequestParam String email, @RequestParam String password) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-
-        if (!optionalUser.isPresent()) {
-            return ResponseEntity.ok(false); // 유저가 없을 때
-        }
-
-        User foundUser = optionalUser.get();
-
-        if (!password.equals(foundUser.getPassword())) {
-            return ResponseEntity.ok(false); // 비밀번호 틀렸을 때
-        }
-
-        return ResponseEntity.ok(true); // 이메일, 비번 다 맞을 때
-    }
 
     @DeleteMapping("/delete") // 회원탈퇴
     public ResponseEntity<String> deleteUser(HttpSession httpSession) {
@@ -116,7 +111,7 @@ public class UserController {
             session.removeAttribute("user"); // 세션에서 로그인 정보 삭제
             session.invalidate(); // 세션 무효화
             if (user != null) {
-                user.setLogin(false); // 로그인 상태를 false로 변경
+
                 userRepository.save(user); // 업데이트된 User 엔티티를 데이터베이스에 저장
             }
 

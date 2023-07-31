@@ -1,7 +1,22 @@
-
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url:
+    url: jdbc:h2:tcp://localhost/~/test
     username:
     password:
+  h2.console:
+    enabled:true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true

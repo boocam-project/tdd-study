@@ -51,7 +51,7 @@ public class UserService {
     }
 
 
-    public void deleteUser(int userId) throws UserNotFoundException {
+    public void deleteUser(long userId) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
             throw new UserNotFoundException("User not found with id: " + userId);

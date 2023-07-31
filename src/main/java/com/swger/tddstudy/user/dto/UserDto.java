@@ -1,10 +1,7 @@
 package com.swger.tddstudy.user.dto;
 import java.util.Optional;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.swger.tddstudy.user.entity.User;
 
 @Data
@@ -20,6 +17,7 @@ public class UserDto {
     private String password; // 비밀번호
 
     private String nickname; // 닉네임
+
 
     public User toEntity() {
         User user = new User();
