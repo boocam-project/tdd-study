@@ -1,32 +1,20 @@
 package com.swger.tddstudy.user.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import com.swger.tddstudy.user.dto.UserDto;
 import com.swger.tddstudy.user.entity.User;
 import com.swger.tddstudy.user.repository.UserRepository;
 import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.response.LogoutResponse;
 import com.swger.tddstudy.user.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,10 +28,10 @@ public class UserController {
         try {
             userService.save(userDto);
             return ResponseEntity.ok("Join success"); // 메시지 명시
-        } catch (DuplicateKeyException e) { // 중복된 이메일인 경우
+        } catch (DuplicateKeyException u) { // 중복된 username인 경우
             return ResponseEntity.badRequest().body("Join failed: Email already exists");
-        } catch (Exception e) { // 그 외의 예외 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패: " + e.getMessage());
+        } catch (Exception u) { // 그 외의 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패: " + u.getMessage());
         }
     }
 
@@ -77,7 +65,7 @@ public class UserController {
 
         responseBody.put("sessionId", httpSession.getId());
         responseBody.put("nickname", user.getNickname());
-        responseBody.put("email", user.getUsername());
+        responseBody.put("username", user.getUsername());
         responseBody.put("password", user.getPassword());
 
         responseBody.put("message", "Login Success");
