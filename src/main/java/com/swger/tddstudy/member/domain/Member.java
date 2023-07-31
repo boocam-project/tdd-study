@@ -1,7 +1,7 @@
 package com.swger.tddstudy.member.domain;
 
 import com.swger.tddstudy.util.BaseEntity;
-
+import com.swger.tddstudy.member.domain.MemberLevel;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -9,8 +9,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member extends BaseEntity {
 
@@ -36,5 +37,26 @@ public class Member extends BaseEntity {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
+        this.MemberLevel = MemberLevel.BRONZE;
+    }
+    public Member(){}
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Member)) return false;
+        Member member = (Member) o;
+        return Objects.equals(getId(), member.getId())
+                && Objects.equals(getUsername(), member.getUsername())
+                && Objects.equals(getPassword(), member.getPassword())
+                && Objects.equals(getNickname(), member.getNickname())
+                && getMemberLevel() == member.getMemberLevel() && getType() == member.getType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getPassword(),
+                getNickname(), getMemberLevel(), getType());
     }
 }
