@@ -1,4 +1,4 @@
-package com.swger.tddstudy.user.domain;
+package com.swger.tddstudy.user.entity;
 
 import com.swger.tddstudy.util.BaseEntity;
 import javax.persistence.Entity;
@@ -8,9 +8,12 @@ import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 @Entity
 public class User extends BaseEntity {
 

@@ -1,4 +1,4 @@
-package com.swger.tddstudy.user.domain;
+package com.swger.tddstudy.user.entity;
 
 import lombok.RequiredArgsConstructor;
 
