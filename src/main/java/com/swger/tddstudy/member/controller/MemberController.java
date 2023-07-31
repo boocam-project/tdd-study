@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.PackagePrivate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,7 +19,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
 //    signIn이 아니라 SignUp이 맞는 표현.. 영어 이슈
     @PostMapping("/signIn")
-    public String signIn(@RequestBody MemberDTO memberDTO) {
+    public String signIn(@Valid @RequestBody MemberDTO memberDTO) {
         /* 비밀번호 재확인 */
         if (!memberDTO.getPassword().equals(memberDTO.getRePassword())) {
             return "Password Mismatch";

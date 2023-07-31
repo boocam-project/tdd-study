@@ -16,8 +16,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @Transactional
@@ -53,9 +52,10 @@ class MemberSignUpTest {
         List<Member> getMember = memberRepository.findByUsername("testUsername");
         //then
         /* 아이디, 비밀번호 같은지 확인*/
-        /* equals로 진행하려고 했지만 안됨*/
         Assertions.assertThat(getMember.get(0).getUsername()).isEqualTo(signInMember.getUsername());
         Assertions.assertThat(getMember.get(0).getPassword()).isEqualTo(signInMember.getPassword());
+//        equals로 진행하려고 했지만 안됨
+//        Assertions.assertThat(getMember.get(0).equals(signInMember)).isTrue();
     }
 
     /* 회원 가입 실패 - 비밀번호 재확인*/
@@ -81,14 +81,13 @@ class MemberSignUpTest {
     public void SignUpUsernameBlank() throws Exception {
         //given
         MemberDTO signInMember= new MemberDTO("testUsername",
-                "testPassword", "", "testPassword");
+                "testPassword", null, "testPassword");
         String content = om.writeValueAsString(signInMember);
         mockMvc.perform(post("/signIn")
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("signInOK"))
+                .andExpect(status().isBadRequest())
                 .andDo(print());
         // validation이 진행되지 않는 이유...
 //        List<Member> members = memberRepository.findByUsername("testUsername");
