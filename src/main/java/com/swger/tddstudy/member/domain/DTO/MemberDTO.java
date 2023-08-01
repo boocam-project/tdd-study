@@ -1,4 +1,4 @@
-package com.swger.tddstudy.member.domain;
+package com.swger.tddstudy.member.domain.DTO;
 
 import lombok.Getter;
 
@@ -21,4 +21,5 @@ public class MemberDTO {
         this.nickname = nickname;
         this.rePassword = rePassword;
     }
+    public MemberDTO(){}
 }
