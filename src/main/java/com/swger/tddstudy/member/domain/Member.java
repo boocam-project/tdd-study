@@ -46,10 +46,8 @@ public class Member extends BaseEntity {
         this.memberLevel = MemberLevel.BRONZE;
         this.memberType = MemberType.Member;
     }
-    public Member AdminMember(MemberDTO memberDTO){
-        Member member = new Member(memberDTO);
-        member.memberType = MemberType.ADMIN;
-        return member;
+    public void AdminMember(){
+        this.memberType = MemberType.ADMIN;
     }
     public void LevelUp() {
         if (this.getMemberLevel().equals(MemberLevel.SILVER)) {

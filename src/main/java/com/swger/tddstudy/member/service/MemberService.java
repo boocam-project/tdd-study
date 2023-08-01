@@ -28,6 +28,15 @@ public class MemberService {
         join(signUpMember);
         return signUpMember;
     }
+    public Member SignUpAdmin(MemberDTO member){
+        if(!member.getPassword().equals(member.getRePassword())){
+            throw new IllegalArgumentException("RePassword Mismatch");
+        }
+        Member signUpMember = new Member(member);
+        signUpMember.AdminMember();
+        join(signUpMember);
+        return signUpMember;
+    }
     public Member SignIn(MemberSignInDTO member){
         Member signInMember = memberRepository.findByUsername(member.getUsername()).orElseThrow(() -> new IllegalArgumentException("Username Mismatch"));
         if (!signInMember.getPassword().equals(member.getPassword())) {
