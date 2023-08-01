@@ -36,25 +36,6 @@ public class UserControllerTest {
     @MockBean
     UserRegex userRegex;
 
-    // 테스트를 위한 객체 생성 메서드
-    // 로그인 테스트용  UserVO 객체
-    public UserVO newUser1() {
-        return new UserVO("테스트용 이름1", "테스트용 비밀번호1", "테스트용 닉네임1", "SILVER", "USER");
-    }
-
-    public UserVO newUser2() {
-        return new UserVO(0L, "테스트용 이름1", "테스트용 비밀번호1", "테스트용 닉네임1", "SILVER", "USER");
-    }
-
-    // 회원가입 테스트용 UserVO 객체
-    public UserVO newUser3() {
-        return new UserVO("테스트용 이름2", "테스트용 비밀번호2", "테스트용 닉네임2", "SILVER", "USER");
-    }
-
-    public UserVO newUser4() {
-        return new UserVO(1L, "테스트용 이름2", "테스트용 비밀번호2", "테스트용 닉네임2", "SILVER", "USER");
-    }
-
     // 회원가입 정규식 확인 결과 HashMap 객체 (True)
     public Map<String, Object> newRegexTestTrue() {
         Map<String, Object> regexTest = new HashMap<>();
@@ -71,25 +52,23 @@ public class UserControllerTest {
         return regexTest;
     }
 
-    // 로그인 테스트를 위한 회원 저장
-    @BeforeEach
-    void beforeAll() {
-        userService.save(newUser1());
-    }
-
     @Test
     @DisplayName("회원가입 테스트 (양식 맞음)")
     void joinTest1() throws Exception {
 
-        given(userService.save(newUser3())).willReturn(
-                newUser4()
+        UserVO userVO = new UserVO("abc", "abcd1234!", "nickname", "BRONZE", "USER");
+        UserVO savedUserVO = userVO;
+        savedUserVO.setId(0L);
+
+        given(userService.save(userVO)).willReturn(
+                savedUserVO
         );
 
-        given(userRegex.isJoinRegex(newUser3())).willReturn(
+        given(userRegex.isJoinRegex(userVO)).willReturn(
                 newRegexTestTrue()
         );
 
-        String json = new ObjectMapper().writeValueAsString(newUser3());
+        String json = new ObjectMapper().writeValueAsString(userVO);
 
         mockMvc.perform(post("/api/user/join")
                         .content(json)
@@ -103,7 +82,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data.type").exists())
                 .andDo(print());
 
-        verify(userService).save(newUser3());
+        verify(userService).save(userVO);
 
     }
 
@@ -111,15 +90,19 @@ public class UserControllerTest {
     @DisplayName("회원가입 테스트 (양식 틀림)")
     void joinTest2() throws Exception {
 
-        given(userService.save(newUser3())).willReturn(
-                newUser4()
+        UserVO userVO = new UserVO("abc", "abc123", "nickname", "BRONZE", "USER");
+        UserVO savedUserVO = userVO;
+        savedUserVO.setId(0L);
+
+        given(userService.save(userVO)).willReturn(
+                savedUserVO
         );
 
-        given(userRegex.isJoinRegex(newUser3())).willReturn(
+        given(userRegex.isJoinRegex(userVO)).willReturn(
                 newRegexTestFalse()
         );
 
-        String json = new ObjectMapper().writeValueAsString(newUser3());
+        String json = new ObjectMapper().writeValueAsString(userVO);
 
         mockMvc.perform(post("/api/user/join")
                         .content(json)
@@ -128,7 +111,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.message").exists())
                 .andDo(print());
 
-        verify(userRegex).isJoinRegex(newUser3());
+        verify(userRegex).isJoinRegex(userVO);
 
     }
 
@@ -136,13 +119,14 @@ public class UserControllerTest {
     @Test
     @DisplayName("로그인 테스트 (이름, 비밀번호 일치)")
     void loginTest1() throws Exception {
+        UserVO userVO = new UserVO(0L, "abc", "abcd1234!", "nickname", "BRONZE", "USER");
 
         UserVO loginUser = new UserVO();
-        loginUser.setUsername("테스트용 이름1");
-        loginUser.setPassword("테스트용 비밀번호1");
+        loginUser.setUsername("abc");
+        loginUser.setPassword("abcd1234!");
 
         given(userService.login(loginUser)).willReturn(
-                newUser2()
+                userVO
         );
 
         String json = new ObjectMapper().writeValueAsString(loginUser);
