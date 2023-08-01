@@ -1,7 +1,8 @@
 package com.swger.tddstudy.user.restController;
 
 import com.swger.tddstudy.user.domain.UserVO;
-import com.swger.tddstudy.user.service.UserRegex;
+import com.swger.tddstudy.user.request.JoinRequest;
+import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,55 +23,32 @@ import java.util.Map;
 public class UserRestController {
 
     private final UserService userService;
-    private final UserRegex regex;
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody UserVO userVO) {
+    public ResponseEntity<?> join(@Valid @RequestBody JoinRequest joinRequest) {
         Map<String, Object> message = new HashMap<>();
-        Map<String, Object> test = regex.isJoinRegex(userVO);
-        if ((Boolean) test.get("result")) {
-            UserVO savedUser = userService.save(userVO);
-            message.put("status", 200);
-            message.put("data", savedUser);
-            return ResponseEntity.status(HttpStatus.OK).body(message);
-        } else {
-            message.put("status", 400);
-            message.put("message", test.get("message"));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-        }
+        message.put("status", 200);
+        message.put("data", userService.save(joinRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
     @PostMapping("/join/admin")
-    public ResponseEntity<?> joinAdmin(@RequestBody UserVO userVO) {
+    public ResponseEntity<?> joinAdmin(@Valid @RequestBody JoinRequest joinRequest) {
         Map<String, Object> message = new HashMap<>();
-        Map<String, Object> test = regex.isJoinRegex(userVO);
-        if ((Boolean) test.get("result")) {
-            UserVO savedUser = userService.saveAdmin(userVO);
-            message.put("status", 200);
-            message.put("data", savedUser);
-            return ResponseEntity.status(HttpStatus.OK).body(message);
-        } else {
-            message.put("status", 400);
-            message.put("message", test.get("message"));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-        }
+        message.put("status", 200);
+        message.put("data", userService.saveAdmin(joinRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserVO userVO, HttpSession session) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, HttpSession session) {
         Map<String, Object> message = new HashMap<>();
-        UserVO loginResult = userService.login(userVO);
-        if (loginResult != null) {
-            session.setAttribute("username", loginResult.getUsername());
-            session.setAttribute("id", loginResult.getId());
-            message.put("status", 200);
-            message.put("data", loginResult);
-            return ResponseEntity.status(HttpStatus.OK).body(message);
-        } else {
-            message.put("status", 401);
-            message.put("message", "로그인 실패");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
-        }
+        UserVO loginResult = userService.login(loginRequest);
+        session.setAttribute("username", loginResult.getUsername());
+        session.setAttribute("id", loginResult.getId());
+        message.put("status", 200);
+        message.put("data", loginResult);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
 }

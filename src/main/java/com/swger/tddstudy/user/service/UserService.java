@@ -3,7 +3,11 @@ package com.swger.tddstudy.user.service;
 import com.swger.tddstudy.user.domain.User;
 import com.swger.tddstudy.user.domain.UserLevel;
 import com.swger.tddstudy.user.domain.UserVO;
+import com.swger.tddstudy.user.exception.LoginFailureException;
 import com.swger.tddstudy.user.repository.UserRepository;
+import com.swger.tddstudy.user.request.JoinRequest;
+import com.swger.tddstudy.user.request.LoginRequest;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,35 +21,31 @@ import java.util.regex.Pattern;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserVO save(UserVO userVO) {
+    public UserVO save(JoinRequest joinRequest) {
+        UserVO userVO = joinRequest.toUserVO();
         userVO.setUserLevel("BRONZE");
         userVO.setType("USER");
         return userRepository.save(userVO.toEntity()).toUserVO();
     }
 
-    public UserVO saveAdmin(UserVO userVO) {
+    public UserVO saveAdmin(JoinRequest joinRequest) {
+        UserVO userVO = joinRequest.toUserVO();
         userVO.setUserLevel("BRONZE");
         userVO.setType("ADMIN");
         return userRepository.save(userVO.toEntity()).toUserVO();
     }
 
-    public UserVO login(UserVO userVO) {
-        /*
-        login.html에서 입력받은 이름, 비밀번호를 받아오고
-        DB에서 해당 이름을 가져와서
-        입력받은 비밀번호롸 DB에서 조회한 비밀번호의 일치여부를 판단하여
-        일치하면 로그인 성공, 일치하지 않으면 로그인 실패
-         */
-        Optional<User> optionalUserEntity = userRepository.findByUsername(userVO.getUsername());
+    public UserVO login(LoginRequest loginRequest) {
+        Optional<User> optionalUserEntity = userRepository.findByUsername(loginRequest.getUsername());
         if (optionalUserEntity.isPresent()) {
             User loginEntity = optionalUserEntity.get();
-            if (loginEntity.getPassword().equals(userVO.getPassword())) {
+            if (loginEntity.getPassword().equals(loginRequest.getPassword())) {
                 return loginEntity.toUserVO();
             } else {
-                return null;
+                throw new LoginFailureException("비밀번호가 일치하지 않습니다.");
             }
         } else {
-            return null;
+            throw new LoginFailureException("일치하는 회원정보가 없습니다.");
         }
     }
 }
