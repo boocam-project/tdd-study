@@ -24,27 +24,39 @@ public class UserRestController {
     private final UserRegex regex;
 
     @PostMapping("/join")
-    public ResponseEntity join(@RequestBody UserVO userVO) {
+    public ResponseEntity<?> join(@RequestBody UserVO userVO) {
         Map<String, Object> message = new HashMap<>();
         Map<String, Object> test = regex.isJoinRegex(userVO);
         if ((Boolean) test.get("result")) {
             UserVO savedUser = userService.save(userVO);
             message.put("status", 200);
             message.put("data", savedUser);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(message);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
         } else {
             message.put("status", 400);
             message.put("message", test.get("message"));
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(message);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+    }
+
+    @PostMapping("/join/admin")
+    public ResponseEntity<?> joinAdmin(@RequestBody UserVO userVO) {
+        Map<String, Object> message = new HashMap<>();
+        Map<String, Object> test = regex.isJoinRegex(userVO);
+        if ((Boolean) test.get("result")) {
+            UserVO savedUser = userService.saveAdmin(userVO);
+            message.put("status", 200);
+            message.put("data", savedUser);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        } else {
+            message.put("status", 400);
+            message.put("message", test.get("message"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserVO userVO, HttpSession session) {
+    public ResponseEntity<?> login(@RequestBody UserVO userVO, HttpSession session) {
         Map<String, Object> message = new HashMap<>();
         UserVO loginResult = userService.login(userVO);
         if (loginResult != null) {
@@ -52,13 +64,11 @@ public class UserRestController {
             session.setAttribute("id", loginResult.getId());
             message.put("status", 200);
             message.put("data", loginResult);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(message);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
         } else {
             message.put("status", 401);
             message.put("message", "로그인 실패");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(message);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
         }
     }
 

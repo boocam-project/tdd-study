@@ -42,31 +42,31 @@ public class UserRegex {
     public Map<String, Object> isJoinRegex(UserVO userVO){
         String message;
         Map<String, Object> result = new HashMap<>();
-        if(isPassword(userVO.getPassword())){
+        if(!isPassword(userVO.getPassword())){
             message = "비밀번호는 비밀번호 양식은 영문+특수문자+숫자 8~15자 입니다.";
             result.put("result", false);
             result.put("message", message);
             return result;
         }
-        if(isUserLevel(userVO.getUserLevel())){
+        if(!isUserLevel(userVO.getUserLevel())){
             message = "유저 레벨은 BRONZE, SILVER, GOLD 가 있습니다.";
             result.put("result", false);
             result.put("message", message);
             return result;
         }
-        if(isType(userVO.getType())){
+        if(!isType(userVO.getType())){
             message = "유저 타입은 USER, ADMIN 이 있습니다.";
             result.put("result", false);
             result.put("message", message);
             return result;
         }
-        if(isFitLength(userVO.getUsername(),2, 10)){
+        if(!isFitLength(userVO.getUsername(),2, 10)){
             message = "이름을 2~10자 로 입력하십시오.";
             result.put("result", false);
             result.put("message", message);
             return result;
         }
-        if(isFitLength(userVO.getNickname(),2, 10)){
+        if(!isFitLength(userVO.getNickname(),2, 10)){
             message = "닉네임을 2~10자 로 입력하십시오.";
             result.put("result", false);
             result.put("message", message);

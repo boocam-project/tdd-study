@@ -18,6 +18,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserVO save(UserVO userVO) {
+        userVO.setUserLevel("BRONZE");
+        userVO.setType("USER");
+        return userRepository.save(userVO.toEntity()).toUserVO();
+    }
+
+    public UserVO saveAdmin(UserVO userVO) {
+        userVO.setUserLevel("BRONZE");
+        userVO.setType("ADMIN");
         return userRepository.save(userVO.toEntity()).toUserVO();
     }
 
@@ -35,34 +43,6 @@ public class UserService {
                 return loginEntity.toUserVO();
             } else {
                 return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public UserVO findById(Long id) {
-        Optional<User> optionalUserEntity = userRepository.findById(id);
-        if (optionalUserEntity.isPresent()) {
-            return optionalUserEntity.get().toUserVO();
-        } else {
-            return null;
-        }
-    }
-
-    // 다섯 번 주문시 userLevel이 업그레이드 되는 기능을 위한 update를 지원
-    public UserVO levelUp(Long id) {
-        Optional<User> optionalUserEntity = userRepository.findById(id);
-        if (optionalUserEntity.isPresent()) {
-            User user = optionalUserEntity.get();
-            if (user.getUserLevel() == UserLevel.BRONZE) {
-                user.setUserLevel(UserLevel.SILVER);
-                return user.toUserVO();
-            } else if (user.getUserLevel() == UserLevel.SILVER) {
-                user.setUserLevel(UserLevel.GOLD);
-                return user.toUserVO();
-            } else {
-                return user.toUserVO();
             }
         } else {
             return null;

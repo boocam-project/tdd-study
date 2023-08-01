@@ -37,8 +37,11 @@ public class User extends BaseEntity {
     private UserType type;
 
     public UserVO toUserVO() {
-        UserVO userVO = UserVO.builder().id(this.id).username(this.username).password(this.password)
-                .nickname(this.nickname).userLevel(this.userLevel.name()).type(this.type.name()).build();
+        UserVO userVO = UserVO.builder().id(this.id).username(this.username).password(this.password).nickname(this.nickname).userLevel(this.userLevel.name()).type(this.type.name()).build();
         return userVO;
+    }
+
+    public void levelUp() {
+        this.userLevel = this.userLevel.levelUp();
     }
 }
