@@ -1,15 +1,12 @@
 package com.swger.tddstudy.member.domain;
 
+import com.swger.tddstudy.member.domain.DTO.MemberDTO;
 import com.swger.tddstudy.util.BaseEntity;
-import com.swger.tddstudy.member.domain.MemberLevel;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -28,35 +25,31 @@ public class Member extends BaseEntity {
     private String nickname;
 
     @Enumerated(EnumType.STRING)
-    private MemberLevel MemberLevel;
+    private MemberLevel memberLevel;
 
     @Enumerated(EnumType.STRING)
-    private MemberType type;
+    private MemberType memberType;
 
     public Member(String username, String password, String nickname) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.MemberLevel = MemberLevel.BRONZE;
+        this.memberLevel = MemberLevel.BRONZE;
+        this.memberType = MemberType.Member;
     }
     public Member(){}
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Member)) return false;
-        Member member = (Member) o;
-        return Objects.equals(getId(), member.getId())
-                && Objects.equals(getUsername(), member.getUsername())
-                && Objects.equals(getPassword(), member.getPassword())
-                && Objects.equals(getNickname(), member.getNickname())
-                && getMemberLevel() == member.getMemberLevel() && getType() == member.getType();
+    public Member(MemberDTO memberDTO){
+        this.username = memberDTO.getUsername();
+        this.password = memberDTO.getPassword();
+        this.nickname = memberDTO.getNickname();
+        this.memberLevel = MemberLevel.BRONZE;
+        this.memberType = MemberType.Member;
+    }
+    public Member AdminMember(MemberDTO memberDTO){
+        Member member = new Member(memberDTO);
+        member.memberType = MemberType.ADMIN;
+        return member;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getUsername(), getPassword(),
-                getNickname(), getMemberLevel(), getType());
-    }
 }

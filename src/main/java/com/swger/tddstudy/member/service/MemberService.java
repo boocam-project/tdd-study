@@ -23,7 +23,7 @@ public class MemberService {
         if(!member.getPassword().equals(member.getRePassword())){
             throw new IllegalArgumentException("RePassword Mismatch");
         }
-        Member signUpMember = new Member(member.getUsername(), member.getPassword(), member.getNickname());
+        Member signUpMember = new Member(member);
         join(signUpMember);
         return signUpMember;
     }
