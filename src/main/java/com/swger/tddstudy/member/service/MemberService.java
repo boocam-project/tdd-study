@@ -3,6 +3,7 @@ package com.swger.tddstudy.member.service;
 import com.swger.tddstudy.member.domain.Member;
 import com.swger.tddstudy.member.domain.DTO.MemberDTO;
 import com.swger.tddstudy.member.domain.DTO.MemberSignInDTO;
+import com.swger.tddstudy.member.domain.MemberLevel;
 import com.swger.tddstudy.member.domain.MemberType;
 import com.swger.tddstudy.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,4 +35,5 @@ public class MemberService {
         }
         return signInMember;
     }
+
 }

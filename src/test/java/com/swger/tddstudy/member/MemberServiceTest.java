@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.swger.tddstudy.member.domain.DTO.MemberDTO;
 import com.swger.tddstudy.member.domain.DTO.MemberSignInDTO;
 import com.swger.tddstudy.member.domain.Member;
+import com.swger.tddstudy.member.domain.MemberLevel;
 import com.swger.tddstudy.member.repository.MemberRepository;
 import com.swger.tddstudy.member.service.MemberService;
 import org.assertj.core.api.Assertions;
@@ -93,7 +94,5 @@ public class MemberServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Password Mismatch");
     }
-
-
 
 }

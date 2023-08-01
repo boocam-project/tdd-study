@@ -51,5 +51,13 @@ public class Member extends BaseEntity {
         member.memberType = MemberType.ADMIN;
         return member;
     }
+    public void LevelUp() {
+        if (this.getMemberLevel().equals(MemberLevel.SILVER)) {
+            this.memberLevel = MemberLevel.GOLD;
+        }
+        if (this.getMemberLevel().equals(MemberLevel.BRONZE)) {
+            this.memberLevel = MemberLevel.SILVER;
+        }
+    }
 
 }
