@@ -3,6 +3,7 @@ package com.swger.tddstudy.product.domain;
 import com.swger.tddstudy.util.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AccessLevel;
@@ -21,10 +22,10 @@ public class Product extends BaseEntity {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @Min(1000)
     private int price;
 
-    @NotBlank
+    @Min(1)
     private int amount;
 
     @Enumerated(EnumType.STRING)
@@ -34,8 +35,7 @@ public class Product extends BaseEntity {
         this.name = name;
         this.price = price;
         this.amount = amount;
-        if(amount >0) this.sellingStatus = SellingStatus.SELLING;
-        else this.sellingStatus = SellingStatus.STOP_SELLING;
+        this.sellingStatus = SellingStatus.SELLING;
     }
     public void sellProduct(){
         this.amount -= 1;
