@@ -94,5 +94,4 @@ public class MemberServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Password Mismatch");
     }
-
 }

@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     @PostMapping("/signUp")
     public String signUp(@Validated @RequestBody MemberDTO memberDTO, BindingResult bindingResult) throws Exception{
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
