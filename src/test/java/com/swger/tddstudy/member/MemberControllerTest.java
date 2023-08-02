@@ -72,7 +72,8 @@ public class MemberControllerTest {
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertTrue(result.getResolvedException().getClass().isAssignableFrom(BindException.class)))
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        .getClass().isAssignableFrom(BindException.class)))
                         .andDo(print());
 
     }
