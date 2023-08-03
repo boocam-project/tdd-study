@@ -1,6 +1,6 @@
 package com.swger.tddstudy.user.request;
 
-import com.swger.tddstudy.user.domain.UserVO;
+import com.swger.tddstudy.user.domain.UserDto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -21,7 +21,7 @@ public class LoginRequest {
     @Size(min = 8, max = 15, message = "비밀번호를 8자 이상 10자 이하로 입력하세요.")
     private String password;
 
-    public UserVO toUserVO() {
-        return UserVO.builder().username(this.username).password(this.password).build();
+    public UserDto toUserDto() {
+        return UserDto.builder().username(this.username).password(this.password).build();
     }
 }

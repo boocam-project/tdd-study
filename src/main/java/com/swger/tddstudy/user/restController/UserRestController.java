@@ -1,6 +1,6 @@
 package com.swger.tddstudy.user.restController;
 
-import com.swger.tddstudy.user.domain.UserVO;
+import com.swger.tddstudy.user.domain.UserDto;
 import com.swger.tddstudy.user.request.JoinRequest;
 import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.service.UserService;
@@ -43,12 +43,11 @@ public class UserRestController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, HttpSession session) {
         Map<String, Object> message = new HashMap<>();
-        UserVO loginResult = userService.login(loginRequest);
+        UserDto loginResult = userService.login(loginRequest);
         session.setAttribute("username", loginResult.getUsername());
         session.setAttribute("id", loginResult.getId());
         message.put("status", 200);
         message.put("data", loginResult);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
-
 }

@@ -1,13 +1,12 @@
 package com.swger.tddstudy.user;
 
 import com.swger.tddstudy.user.domain.User;
+import com.swger.tddstudy.user.domain.UserDto;
 import com.swger.tddstudy.user.domain.UserLevel;
 import com.swger.tddstudy.user.domain.UserType;
-import com.swger.tddstudy.user.domain.UserVO;
 import com.swger.tddstudy.user.request.JoinRequest;
 import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.service.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class UserTest {
     @Autowired
     private UserService userService;
 
-    public UserVO newUser() {
-        return new UserVO("abc", "abcd1234!", "nickname", "BRONZE", "USER");
+    public UserDto newUser() {
+        return new UserDto("abc", "abcd1234!", "nickname", "BRONZE", "USER");
     }
 
     @Test
@@ -34,8 +33,8 @@ public class UserTest {
     @DisplayName("회원가입 테스트 (USER)")
     public void userJoinTest1() {
         JoinRequest joinRequest = new JoinRequest("abc", "abcd1234!", "nickname");
-        UserVO savedUserVO = userService.save(joinRequest);
-        assertThat(savedUserVO).extracting("username", "password", "nickname", "userLevel", "type")
+        UserDto savedUserDto = userService.save(joinRequest);
+        assertThat(savedUserDto).extracting("username", "password", "nickname", "userLevel", "type")
                 .containsExactly("abc", "abcd1234!", "nickname", "BRONZE", "USER");
     }
 
@@ -44,8 +43,8 @@ public class UserTest {
     @DisplayName("회원가입 테스트 (ADMIN)")
     public void userJoinTest2() {
         JoinRequest joinRequest = new JoinRequest("abc", "abcd1234!", "nickname");
-        UserVO savedUserVO = userService.saveAdmin(joinRequest);
-        assertThat(savedUserVO).extracting("username", "password", "nickname", "userLevel", "type")
+        UserDto savedUserDto = userService.saveAdmin(joinRequest);
+        assertThat(savedUserDto).extracting("username", "password", "nickname", "userLevel", "type")
                 .containsExactly("abc", "abcd1234!", "nickname", "BRONZE", "ADMIN");
     }
 
@@ -57,7 +56,7 @@ public class UserTest {
         userService.save(joinRequest);
         // 로그인 객체 생성 후 로그인
         LoginRequest loginRequest = LoginRequest.builder().username("abc").password("abcd1234!").build();
-        UserVO loginResult = userService.login(loginRequest);
+        UserDto loginResult = userService.login(loginRequest);
         // 로그인 결과가 UserVO면 성공
         assertThat(loginResult).extracting("username", "password", "nickname", "userLevel", "type")
                 .containsExactly("abc", "abcd1234!", "nickname", "BRONZE", "USER");
@@ -89,5 +88,4 @@ public class UserTest {
         user.levelUp();
         assertThat(user.getUserLevel()).isEqualTo(UserLevel.GOLD);
     }
-
 }

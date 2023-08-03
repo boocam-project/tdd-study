@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Users")
 public class User extends BaseEntity {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +37,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    public UserVO toUserVO() {
-        UserVO userVO = UserVO.builder().id(this.id).username(this.username).password(this.password).nickname(this.nickname).userLevel(this.userLevel.name()).type(this.type.name()).build();
-        return userVO;
+    public UserDto toUserDto() {
+        UserDto userDto = UserDto.builder().id(this.id).username(this.username).password(this.password).nickname(this.nickname).userLevel(this.userLevel.name()).type(this.type.name()).build();
+        return userDto;
     }
 
     public void levelUp() {

@@ -1,7 +1,7 @@
 package com.swger.tddstudy.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swger.tddstudy.user.domain.UserVO;
+import com.swger.tddstudy.user.domain.UserDto;
 import com.swger.tddstudy.user.request.JoinRequest;
 import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.restController.UserRestController;
@@ -14,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,10 +35,10 @@ public class UserControllerTest {
     void joinTest1() throws Exception {
 
         JoinRequest joinRequest = new JoinRequest("abc", "abcd1234!", "nickname");
-        UserVO UserVO = new UserVO(0L, "abc", "abcd1234!", "nickname", "BRONZE", "USER");
+        UserDto UserDto = new UserDto(0L, "abc", "abcd1234!", "nickname", "BRONZE", "USER");
 
         given(userService.save(joinRequest)).willReturn(
-                UserVO
+                UserDto
         );
 
         String json = new ObjectMapper().writeValueAsString(joinRequest);
@@ -63,10 +62,10 @@ public class UserControllerTest {
     @DisplayName("회원가입 테스트 (양식 틀림)")
     void joinTest2() throws Exception {
         JoinRequest joinRequest = new JoinRequest("abc", "abc123", "nickname");
-        UserVO UserVO = new UserVO(0L, "abc", "abc123", "nickname", "BRONZE", "USER");
+        UserDto UserDto = new UserDto(0L, "abc", "abc123", "nickname", "BRONZE", "USER");
 
         given(userService.save(joinRequest)).willReturn(
-                UserVO
+                UserDto
         );
 
         String json = new ObjectMapper().writeValueAsString(joinRequest);
@@ -83,12 +82,12 @@ public class UserControllerTest {
     @Test
     @DisplayName("로그인 테스트")
     void loginTest1() throws Exception {
-        UserVO userVO = new UserVO(0L, "abc", "abcd1234!", "nickname", "BRONZE", "USER");
+        UserDto userDto = new UserDto(0L, "abc", "abcd1234!", "nickname", "BRONZE", "USER");
 
         LoginRequest loginRequest = LoginRequest.builder().username("abc").password("abcd1234!").build();
 
         given(userService.login(loginRequest)).willReturn(
-                userVO
+                userDto
         );
 
         String json = new ObjectMapper().writeValueAsString(loginRequest);

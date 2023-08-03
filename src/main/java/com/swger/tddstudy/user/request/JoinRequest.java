@@ -1,6 +1,6 @@
 package com.swger.tddstudy.user.request;
 
-import com.swger.tddstudy.user.domain.UserVO;
+import com.swger.tddstudy.user.domain.UserDto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -25,8 +25,7 @@ public class JoinRequest {
     @Size(min = 2, max = 10, message = "닉네임을 2자 이상 10자 이하로 입력하세요. ")
     private String nickname;
 
-    public UserVO toUserVO() {
-        return UserVO.builder().username(this.username).password(this.password).nickname(this.nickname).build();
+    public UserDto toUserDto() {
+        return UserDto.builder().username(this.username).password(this.password).nickname(this.nickname).build();
     }
-
 }

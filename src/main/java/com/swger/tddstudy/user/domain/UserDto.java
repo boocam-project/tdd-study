@@ -8,7 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class UserVO {
+public class UserDto {
+
     private Long id;
     private String username;
     private String password;
@@ -16,7 +17,7 @@ public class UserVO {
     private String userLevel;
     private String type;
 
-    public UserVO(String username, String password, String nickname, String userLevel, String type) {
+    public UserDto(String username, String password, String nickname, String userLevel, String type) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
