@@ -1,16 +1,17 @@
 package com.swger.tddstudy.user.request;
 
 import com.swger.tddstudy.user.domain.UserDto;
-import lombok.*;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class LoginRequest {
 
     @NotBlank(message = "이름을 입력하세요.")

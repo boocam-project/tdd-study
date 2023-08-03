@@ -4,14 +4,13 @@ import com.swger.tddstudy.user.domain.UserDto;
 import com.swger.tddstudy.user.request.JoinRequest;
 import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.service.UserService;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequiredArgsConstructor

@@ -12,7 +12,9 @@ public enum UserLevel {
 
     public UserLevel levelUp() {
         UserLevel[] levels = values();
-        if (this.level >= levels.length - 1) return this;
+        if (this.level >= levels.length - 1) {
+            return this;
+        }
         return levels[this.level + 1];
     }
 }

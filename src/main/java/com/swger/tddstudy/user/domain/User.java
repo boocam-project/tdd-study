@@ -1,9 +1,21 @@
 package com.swger.tddstudy.user.domain;
 
 import com.swger.tddstudy.util.BaseEntity;
-import lombok.*;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -38,7 +50,9 @@ public class User extends BaseEntity {
     private UserType type;
 
     public UserDto toUserDto() {
-        UserDto userDto = UserDto.builder().id(this.id).username(this.username).password(this.password).nickname(this.nickname).userLevel(this.userLevel.name()).type(this.type.name()).build();
+        UserDto userDto = UserDto.builder().id(this.id).username(this.username)
+            .password(this.password).nickname(this.nickname).userLevel(this.userLevel.name())
+            .type(this.type.name()).build();
         return userDto;
     }
 
