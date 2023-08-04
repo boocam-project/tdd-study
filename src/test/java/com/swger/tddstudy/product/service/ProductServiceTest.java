@@ -9,17 +9,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.swger.tddstudy.product.domain.Product;
+import com.swger.tddstudy.product.domain.ProductDto;
 import com.swger.tddstudy.product.domain.SellingStatus;
 import com.swger.tddstudy.product.exception.ProductNotFoundException;
 import com.swger.tddstudy.product.repository.ProductRepository;
-import com.swger.tddstudy.user.domain.User;
-import com.swger.tddstudy.user.domain.UserDto;
-import com.swger.tddstudy.user.domain.UserLevel;
-import com.swger.tddstudy.user.domain.UserType;
-import com.swger.tddstudy.user.exception.LoginFailureException;
-import com.swger.tddstudy.user.repository.UserRepository;
-import com.swger.tddstudy.user.request.JoinRequest;
-import com.swger.tddstudy.user.service.UserService;
+import com.swger.tddstudy.product.request.ProductAddRequest;
+import com.swger.tddstudy.product.request.ProductStockUpRequest;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -89,7 +84,7 @@ public class ProductServiceTest {
         }
 
         @Test
-        @DisplayName("")
+        @DisplayName("일치하는 상품이 없는 경우 실패")
         void Test3() {
 
             // given
@@ -99,6 +94,95 @@ public class ProductServiceTest {
             // when, then
             Throwable exception = assertThrows(ProductNotFoundException.class, () -> {
                 productService.sellingStatusUpdate(0L);
+            });
+            assertEquals("일치하는 상품이 없습니다.", exception.getMessage());
+            verify(productRepository, times(1)).findById(any(Long.class));
+        }
+    }
+
+    @Nested
+    @DisplayName("새상품 등록 : ")
+    class ProductAddTest {
+
+        private Product newProduct() {
+            return Product.builder().id(0L).name("product").price(340000).amount(10)
+                .sellingStatus(SellingStatus.SELLING).build();
+        }
+
+        private ProductDto newProductDto() {
+            return ProductDto.builder().id(0L).name("product").price(340000).amount(10)
+                .sellingStatus("SELLING").build();
+        }
+
+        private ProductAddRequest newProductAddRequest() {
+            return ProductAddRequest.builder().name("product").price(340000).amount(10).build();
+        }
+
+        @Test
+        @DisplayName("새상품 추가 성공")
+        void Test1() {
+
+            // given
+            given(productRepository.save(any(Product.class))).willReturn(newProduct());
+
+            // when
+            ProductDto addedProductDto = productService.productAdd(newProductAddRequest());
+
+            // then
+            assertThat(addedProductDto).extracting("id", "name", "price", "amount", "sellingStatus")
+                .containsExactly(0L, "product", 340000, 10, "SELLING");
+
+            verify(productRepository, times(1)).save(any(Product.class));
+        }
+    }
+
+    @Nested
+    @DisplayName("상품 재고 추가 : ")
+    class ProductStockUpTest {
+
+        private Product newSoldOutProduct() {
+            return Product.builder().id(0L).name("product").price(340000).amount(0)
+                .sellingStatus(SellingStatus.STOP_SELLING).build();
+        }
+
+        private Product newProduct() {
+            return Product.builder().id(0L).name("product").price(340000).amount(10)
+                .sellingStatus(SellingStatus.SELLING).build();
+        }
+
+        private ProductStockUpRequest newProductStockUpRequest() {
+            return ProductStockUpRequest.builder().id(0L).amount(10).build();
+        }
+
+        @Test
+        @DisplayName("재고가 0에서 추가된 경우 판매 상태도 변경")
+        void Test1() {
+
+            // given
+            Optional<Product> optionalProduct = Optional.ofNullable(newSoldOutProduct());
+            given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
+
+            // when
+            ProductDto productDto = productService.productStockUp(newProductStockUpRequest());
+
+            // then
+            assertThat(productDto).extracting("id", "name", "price", "amount", "sellingStatus")
+                .containsExactly(0L, "product", 340000, 10, "SELLING");
+
+            verify(productRepository, times(1)).findById(any(Long.class));
+        }
+
+        @Test
+        @DisplayName("일치하는 상품이 없는 경우 실패")
+        void Test2() {
+
+            // given
+            Optional<Product> optionalProduct = Optional.empty();
+            given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
+
+            // when, then
+            Throwable exception = assertThrows(ProductNotFoundException.class, () -> {
+                productService.productStockUp(newProductStockUpRequest());
             });
             assertEquals("일치하는 상품이 없습니다.", exception.getMessage());
             verify(productRepository, times(1)).findById(any(Long.class));
