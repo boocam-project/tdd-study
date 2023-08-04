@@ -12,6 +12,7 @@ import com.swger.tddstudy.product.domain.Product;
 import com.swger.tddstudy.product.domain.ProductDto;
 import com.swger.tddstudy.product.domain.SellingStatus;
 import com.swger.tddstudy.product.exception.ProductNotFoundException;
+import com.swger.tddstudy.product.exception.ProductSoldOutExcpetion;
 import com.swger.tddstudy.product.repository.ProductRepository;
 import com.swger.tddstudy.product.request.ProductAddRequest;
 import com.swger.tddstudy.product.request.ProductStockUpRequest;
@@ -58,11 +59,11 @@ public class ProductServiceTest {
             given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
 
             // when
-            String message = productService.sellingStatusUpdate(0L);
+            ProductDto productDto = productService.sellingStatusUpdate(0L);
 
             // then
-            assertThat(message).isEqualTo("마지막 재고가 소진 되어 상품 판매가 중지 됩니다.");
-
+            assertThat(productDto).extracting("id", "name", "price", "amount", "sellingStatus")
+                .containsExactly(0L, "product", 340000, 0, "STOP_SELLING");
             verify(productRepository, times(1)).findById(any(Long.class));
         }
 
@@ -75,11 +76,11 @@ public class ProductServiceTest {
             given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
 
             // when
-            String message = productService.sellingStatusUpdate(0L);
+            ProductDto productDto = productService.sellingStatusUpdate(0L);
 
             // then
-            assertThat(message).isEqualTo("판매가 계속 됩니다.");
-
+            assertThat(productDto).extracting("id", "name", "price", "amount", "sellingStatus")
+                .containsExactly(0L, "product", 340000, 10, "SELLING");
             verify(productRepository, times(1)).findById(any(Long.class));
         }
 
@@ -109,11 +110,6 @@ public class ProductServiceTest {
                 .sellingStatus(SellingStatus.SELLING).build();
         }
 
-        private ProductDto newProductDto() {
-            return ProductDto.builder().id(0L).name("product").price(340000).amount(10)
-                .sellingStatus("SELLING").build();
-        }
-
         private ProductAddRequest newProductAddRequest() {
             return ProductAddRequest.builder().name("product").price(340000).amount(10).build();
         }
@@ -131,7 +127,6 @@ public class ProductServiceTest {
             // then
             assertThat(addedProductDto).extracting("id", "name", "price", "amount", "sellingStatus")
                 .containsExactly(0L, "product", 340000, 10, "SELLING");
-
             verify(productRepository, times(1)).save(any(Product.class));
         }
     }
@@ -140,14 +135,14 @@ public class ProductServiceTest {
     @DisplayName("상품 재고 추가 : ")
     class ProductStockUpTest {
 
-        private Product newSoldOutProduct() {
-            return Product.builder().id(0L).name("product").price(340000).amount(0)
-                .sellingStatus(SellingStatus.STOP_SELLING).build();
-        }
-
         private Product newProduct() {
             return Product.builder().id(0L).name("product").price(340000).amount(10)
                 .sellingStatus(SellingStatus.SELLING).build();
+        }
+
+        private Product newSoldOutProduct() {
+            return Product.builder().id(0L).name("product").price(340000).amount(0)
+                .sellingStatus(SellingStatus.STOP_SELLING).build();
         }
 
         private ProductStockUpRequest newProductStockUpRequest() {
@@ -155,8 +150,25 @@ public class ProductServiceTest {
         }
 
         @Test
-        @DisplayName("재고가 0에서 추가된 경우 판매 상태도 변경")
+        @DisplayName("재고 추가 성공")
         void Test1() {
+
+            // given
+            Optional<Product> optionalProduct = Optional.ofNullable(newProduct());
+            given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
+
+            // when
+            ProductDto productDto = productService.productStockUp(newProductStockUpRequest());
+
+            // then
+            assertThat(productDto).extracting("id", "name", "price", "amount", "sellingStatus")
+                .containsExactly(0L, "product", 340000, 20, "SELLING");
+            verify(productRepository, times(1)).findById(any(Long.class));
+        }
+
+        @Test
+        @DisplayName("재고가 0에서 추가된 경우 판매 상태도 변경")
+        void Test2() {
 
             // given
             Optional<Product> optionalProduct = Optional.ofNullable(newSoldOutProduct());
@@ -168,13 +180,12 @@ public class ProductServiceTest {
             // then
             assertThat(productDto).extracting("id", "name", "price", "amount", "sellingStatus")
                 .containsExactly(0L, "product", 340000, 10, "SELLING");
-
             verify(productRepository, times(1)).findById(any(Long.class));
         }
 
         @Test
         @DisplayName("일치하는 상품이 없는 경우 실패")
-        void Test2() {
+        void Test3() {
 
             // given
             Optional<Product> optionalProduct = Optional.empty();
@@ -183,6 +194,91 @@ public class ProductServiceTest {
             // when, then
             Throwable exception = assertThrows(ProductNotFoundException.class, () -> {
                 productService.productStockUp(newProductStockUpRequest());
+            });
+            assertEquals("일치하는 상품이 없습니다.", exception.getMessage());
+            verify(productRepository, times(1)).findById(any(Long.class));
+        }
+    }
+
+    @Nested
+    @DisplayName("상품 판매 시 수량 체크 : ")
+    class ProductSaleTest {
+
+        private Product newProduct() {
+            return Product.builder().id(0L).name("product").price(340000).amount(10)
+                .sellingStatus(SellingStatus.SELLING).build();
+        }
+
+        private Product newLowCntProduct() {
+            return Product.builder().id(0L).name("product").price(340000).amount(2)
+                .sellingStatus(SellingStatus.STOP_SELLING).build();
+        }
+
+        private ProductStockUpRequest newProductStockUpRequest() {
+            return ProductStockUpRequest.builder().id(0L).amount(10).build();
+        }
+
+        @Test
+        @DisplayName("판매 수량 만큼 수량 감소")
+        void Test1() {
+
+            // given
+            Optional<Product> optionalProduct = Optional.ofNullable(newProduct());
+            given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
+
+            // when
+            ProductDto productDto = productService.sale(0L, 3);
+
+            // then
+            assertThat(productDto).extracting("id", "name", "price", "amount", "sellingStatus")
+                .containsExactly(0L, "product", 340000, 7, "SELLING");
+            verify(productRepository, times(1)).findById(any(Long.class));
+        }
+
+        @Test
+        @DisplayName("판매 후 수량이 0이 될 경우 판매 상태 변경")
+        void Test2() {
+
+            // given
+            Optional<Product> optionalProduct = Optional.ofNullable(newLowCntProduct());
+            given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
+
+            // when
+            ProductDto productDto = productService.sale(0L, 2);
+
+            // then
+            assertThat(productDto).extracting("id", "name", "price", "amount", "sellingStatus")
+                .containsExactly(0L, "product", 340000, 0, "STOP_SELLING");
+            verify(productRepository, times(2)).findById(any(Long.class));
+        }
+
+        @Test
+        @DisplayName("수량이 부족한 경우 실패")
+        void Test3() {
+
+            // given
+            Optional<Product> optionalProduct = Optional.ofNullable(newLowCntProduct());
+            given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
+
+            // when, then
+            Throwable exception = assertThrows(ProductSoldOutExcpetion.class, () -> {
+                productService.sale(0L, 3);
+            });
+            assertEquals("재고가 부족합니다.", exception.getMessage());
+            verify(productRepository, times(1)).findById(any(Long.class));
+        }
+
+        @Test
+        @DisplayName("일치하는 상품이 없는 경우 실패")
+        void Test4() {
+
+            // given
+            Optional<Product> optionalProduct = Optional.empty();
+            given(productRepository.findById(any(Long.class))).willReturn(optionalProduct);
+
+            // when, then
+            Throwable exception = assertThrows(ProductNotFoundException.class, () -> {
+                productService.sale(0L, 3);
             });
             assertEquals("일치하는 상품이 없습니다.", exception.getMessage());
             verify(productRepository, times(1)).findById(any(Long.class));
