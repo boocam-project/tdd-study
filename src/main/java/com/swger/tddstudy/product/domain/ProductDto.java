@@ -35,7 +35,7 @@ public class ProductDto {
         this.sellingStatus = sellingStatus;
     }
 
-    public Product toProduct() {
+    public Product toEntity() {
         return Product.builder().name(this.name).price(this.price).amount(this.amount)
             .sellingStatus(SellingStatus.valueOf(this.sellingStatus)).build();
     }
