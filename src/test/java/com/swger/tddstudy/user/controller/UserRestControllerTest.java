@@ -15,7 +15,7 @@ import com.swger.tddstudy.user.domain.UserDto;
 import com.swger.tddstudy.user.exception.LoginFailureException;
 import com.swger.tddstudy.user.request.JoinRequest;
 import com.swger.tddstudy.user.request.LoginRequest;
-import com.swger.tddstudy.user.restController.UserRestController;
+import com.swger.tddstudy.user.restcontroller.UserRestController;
 import com.swger.tddstudy.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -27,7 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UserRestController.class)
-public class UserControllerTest {
+public class UserRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

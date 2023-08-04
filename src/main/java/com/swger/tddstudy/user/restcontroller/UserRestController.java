@@ -1,4 +1,4 @@
-package com.swger.tddstudy.user.restController;
+package com.swger.tddstudy.user.restcontroller;
 
 import com.swger.tddstudy.user.domain.UserDto;
 import com.swger.tddstudy.user.request.JoinRequest;
