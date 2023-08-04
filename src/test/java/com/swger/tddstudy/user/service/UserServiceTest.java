@@ -71,7 +71,6 @@ public class UserServiceTest {
             // then
             assertThat(savedUserDto).extracting("username", "password", "nickname", "userLevel",
                 "type").containsExactly("abc", "abcd1234!", "nickname", "BRONZE", "USER");
-
             verify(userRepository, times(1)).save(any(User.class));
         }
 
@@ -88,7 +87,6 @@ public class UserServiceTest {
             // then
             assertThat(savedUserDto).extracting("username", "password", "nickname", "userLevel",
                 "type").containsExactly("abc", "abcd1234!", "nickname", "BRONZE", "ADMIN");
-
             verify(userRepository, times(1)).save(any(User.class));
         }
     }
@@ -127,7 +125,6 @@ public class UserServiceTest {
             // then
             assertThat(loginResult).extracting("username", "password", "nickname", "userLevel",
                 "type").containsExactly("abc", "abcd1234!", "nickname", "BRONZE", "USER");
-
             verify(userRepository, times(1)).findByUsername(any(String.class));
         }
 
