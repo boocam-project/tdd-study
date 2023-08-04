@@ -224,4 +224,52 @@ public class UserServiceTest {
             assertThat(user.getUserLevel()).isEqualTo(UserLevel.GOLD);
         }
     }
+
+    @Nested
+    @DisplayName("관리자 확인 : ")
+    class IsAdminTest {
+        private User newUser() {
+
+            return User.builder().id(0L).username("abc").password("abcd1234!").nickname("nickname")
+                .userLevel(UserLevel.BRONZE).type(UserType.USER).build();
+        }
+
+        private User newAdmin() {
+
+            return User.builder().id(0L).username("abc").password("abcd1234!").nickname("nickname")
+                .userLevel(UserLevel.BRONZE).type(UserType.ADMIN).build();
+        }
+
+        @Test
+        @DisplayName("일반 회원은 false 반환")
+        void Test1() {
+
+            // given
+            Optional<User> optionalUser = Optional.ofNullable(newUser());
+            given(userRepository.findById(any(Long.class))).willReturn(optionalUser);
+
+            // when
+            Boolean isAdmin = userService.isAdmin(0L);
+
+            // then
+            assertThat(isAdmin).isFalse();
+            verify(userRepository, times(1)).findById(any(Long.class));
+        }
+
+        @Test
+        @DisplayName("관리자는 true 반환")
+        void Test2() {
+
+            // given
+            Optional<User> optionalUser = Optional.ofNullable(newAdmin());
+            given(userRepository.findById(any(Long.class))).willReturn(optionalUser);
+
+            // when
+            Boolean isAdmin = userService.isAdmin(0L);
+
+            // then
+            assertThat(isAdmin).isTrue();
+            verify(userRepository, times(1)).findById(any(Long.class));
+        }
+    }
 }
