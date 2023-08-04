@@ -1,16 +1,13 @@
 package com.swger.tddstudy.product.request;
 
-import com.swger.tddstudy.product.domain.Product;
 import com.swger.tddstudy.product.domain.ProductDto;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Getter
 @Builder
