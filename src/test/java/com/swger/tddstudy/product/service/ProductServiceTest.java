@@ -42,7 +42,7 @@ public class ProductServiceTest {
 
     @Nested
     @DisplayName("상품 판매 상태 변경 : ")
-    class JoinServiceTest {
+    class ProductSellingStatusUpdateTest {
 
         private Product newSoldOutProduct() {
             return Product.builder().id(0L).name("product").price(340000).amount(0)
