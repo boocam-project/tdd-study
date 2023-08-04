@@ -2,6 +2,7 @@ package com.swger.tddstudy.user.service;
 
 import com.swger.tddstudy.user.domain.User;
 import com.swger.tddstudy.user.domain.UserDto;
+import com.swger.tddstudy.user.domain.UserType;
 import com.swger.tddstudy.user.exception.LoginFailureException;
 import com.swger.tddstudy.user.repository.UserRepository;
 import com.swger.tddstudy.user.request.JoinRequest;
@@ -34,13 +35,27 @@ public class UserService {
     }
 
     public UserDto login(LoginRequest loginRequest) {
-        Optional<User> optionalUserEntity = userRepository.findByUsername(loginRequest.getUsername());
+        Optional<User> optionalUserEntity = userRepository.findByUsername(
+            loginRequest.getUsername());
         if (optionalUserEntity.isPresent()) {
             User loginEntity = optionalUserEntity.get();
             if (loginEntity.getPassword().equals(loginRequest.getPassword())) {
                 return loginEntity.toUserDto();
             } else {
                 throw new LoginFailureException("비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            throw new LoginFailureException("일치하는 회원정보가 없습니다.");
+        }
+    }
+
+    public boolean isAdmin(Long id) {
+        Optional<User> optionalUserEntity = userRepository.findById(id);
+        if (optionalUserEntity.isPresent()) {
+            if (optionalUserEntity.get().getType() == UserType.ADMIN) {
+                return true;
+            } else {
+                return false;
             }
         } else {
             throw new LoginFailureException("일치하는 회원정보가 없습니다.");
