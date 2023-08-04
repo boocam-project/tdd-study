@@ -1,4 +1,4 @@
-package com.swger.tddstudy.user.controller;
+package com.swger.tddstudy.user.restcontroller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
