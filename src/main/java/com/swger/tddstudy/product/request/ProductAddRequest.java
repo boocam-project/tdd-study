@@ -2,6 +2,7 @@ package com.swger.tddstudy.product.request;
 
 import com.swger.tddstudy.product.domain.ProductDto;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductAddRequest {
 
-    @NotNull(message = "상품명을 입력하세요.")
+    @NotBlank(message = "상품명을 입력하세요.")
     @Size(min = 2, max = 10, message = "상품명을 2자 이상 30자 이하로 입력하세요.")
     private String name;
 
