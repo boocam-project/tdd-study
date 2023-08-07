@@ -47,14 +47,14 @@ public class MemberControllerTest {
         MemberDTO signInMember= new MemberDTO("testUsername",
                 "testPassword", "testNickname", "testPassword");
         String content = om.writeValueAsString(signInMember);
-        mockMvc.perform(post("/signUp")
-                        .content(content)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("signUpOK"))
-                .andDo(print());
         //when
+        mockMvc.perform(post("/signUp")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string("signUpOK"))
+            .andDo(print());
         Optional<Member> getMember = memberRepository.findByUsername(signInMember.getUsername());
         //then
         /* 아이디, 비밀번호 같은지 확인*/
