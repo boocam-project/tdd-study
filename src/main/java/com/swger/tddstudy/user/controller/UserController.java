@@ -1,14 +1,16 @@
 package com.swger.tddstudy.user.controller;
 
-import com.swger.tddstudy.user.domain.UserVO;
+import com.swger.tddstudy.user.domain.UserDto;
 import com.swger.tddstudy.user.request.JoinRequest;
 import com.swger.tddstudy.user.request.LoginRequest;
 import com.swger.tddstudy.user.service.UserService;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/login-form")
-    public String loginForm() throws Exception {
+    public String loginForm() {
         return "userPages/login";
     }
 
@@ -35,7 +37,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute LoginRequest loginRequest, HttpSession session) {
-        UserVO loginResult = userService.login(loginRequest);
+        UserDto loginResult = userService.login(loginRequest);
         if (loginResult != null) {
             session.setAttribute("username", loginResult.getUsername());
             session.setAttribute("id", loginResult.getId());
@@ -44,5 +46,4 @@ public class UserController {
             return "userPages/login";
         }
     }
-
 }
