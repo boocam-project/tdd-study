@@ -28,18 +28,18 @@
 #### 패키지 구조
 ```text
 ├── controller
-│   └── UserController.java
+│   └── MemberController.java
 ├── domain
-│   ├── User.java
-│   ├── UserLevel.java
-│   └── UserType.java
+│   ├── Member.java
+│   ├── MemberLevel.java
+│   └── MemberType.java
 ├── repository
-│   └── UserRepository.java
+│   └── MemberRepository.java
 └── service
-    └── UserService.java
+    └── MemberService.java
 
 ```
-* 모든 도메인 패키지 구조는 다음을 따릅니다. (예시 : `user` 도메인)
+* 모든 도메인 패키지 구조는 다음을 따릅니다. (예시 : `Member` 도메인)
 * 각 패키지 내부의 클래스들은 예시일 뿐 얼마든지 클래스를 추가로 생성하셔도 됩니다.
 
 ### 유저 도메인을 완성해봅시다.
@@ -49,8 +49,8 @@
 | username       | 사용자 아이디  | 사용자 로그인 아이디              |
 | password       | 사용자 비밀번호 | 사용자 비밀번호                 |
 | nickname       | 사용자 닉네임  | 사용자 닉네임                   |
-| userLevel      | 사용자 등급   | 사용자 등급                   |
-| type           | 사용자 유형   | 사용자 유형으로 ADMIN, USER가 존재 |
+| MemberLevel    | 사용자 등급   | 사용자 등급                   |
+| type           | 사용자 유형   | 사용자 유형으로 ADMIN, Member가 존재 |
 | createdAt      | 생성 일시    | 사용자 최초 생성 일시             |
 | lastModifiedAt | 최종 수정 일시 | 사용자 최종 수정 일시             |
 * 사용자는 `회원가입`이 가능합니다.
@@ -62,7 +62,7 @@
   * BRONZE, SILVER, GOLD가 존재하며 추후 주문 시 결제 금액 할인이 가능합니다.
   * 5번 구매를 하면 SILVER, 10번 구매를 하면 GOLD로 등급업이 됩니다.
 * 사용자 별 `타입(type)`이 존재합니다.
-  * USER : 일반유저로 상품을 구매는 가능하지만 추가할 수 없습니다.
+  * Member : 일반유저로 상품을 구매는 가능하지만 추가할 수 없습니다.
   * ADMIN : 관리자로 상품을 구매와 추가 모두 가능합니다.
 
 <br>
@@ -93,7 +93,7 @@
 | 변수명            | 필드명      | 설명         |
 |----------------|----------|------------|
 | id             | 주문 아이디   | 주문 엔티티 식별자 |
-| userId         | 유저 아이디   | 유저 엔티티 식별자 |
+| MemberId         | 유저 아이디   | 유저 엔티티 식별자 |
 | orderProducts  | 주문 상품 정보 | 주문의 상품의 정보 |
 | price          | 총 주문 가격  | 총 주문 가격    |
 | orderStatus    | 주문 상태    | 주문 상태      |
