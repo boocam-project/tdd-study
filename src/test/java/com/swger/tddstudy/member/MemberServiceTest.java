@@ -5,6 +5,7 @@ import com.swger.tddstudy.member.domain.DTO.MemberDTO;
 import com.swger.tddstudy.member.domain.DTO.MemberSignInDTO;
 import com.swger.tddstudy.member.domain.Member;
 import com.swger.tddstudy.member.domain.MemberLevel;
+import com.swger.tddstudy.member.domain.MemberType;
 import com.swger.tddstudy.member.repository.MemberRepository;
 import com.swger.tddstudy.member.service.MemberService;
 import org.assertj.core.api.Assertions;
@@ -40,6 +41,17 @@ public class MemberServiceTest {
                         memberInRepos.getNickname(),
                         memberInRepos.getMemberLevel(),
                         memberInRepos.getMemberType());
+    }
+    @DisplayName("Admin 타입으로 회원가입")
+    @Test
+    public void SignUpAdmin(){
+        //given
+        MemberDTO signUpMember= new MemberDTO("testUsername",
+            "testPassword", "testNickname", "testPassword");
+        //when
+        Member adminMember = memberService.SignUpAdmin(signUpMember);
+        //then
+        Assertions.assertThat(adminMember.getMemberType()).isEqualTo(MemberType.ADMIN);
     }
     @DisplayName("회원가입 실패-비밀번호 재확인")
     @Test
